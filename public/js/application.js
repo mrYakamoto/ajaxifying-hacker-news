@@ -10,7 +10,7 @@ $(document).ready(function() {
 });
 
 var vote = function(){
-  $( "article a.vote-button" ).click(function(e){
+  $( "div.post-container" ).on("click","a.vote-button",function(e){
     e.preventDefault();
     changeColor(this);
     addVote(this);
@@ -32,7 +32,7 @@ var addVote = function(a){
 };
 
 var removePost = function(){
-  $( "article a.delete" ).click(function(e){
+  $( "div.post-container" ).on("click", "a.delete", function(e){
     e.preventDefault();
     deletePost(this);
   })
