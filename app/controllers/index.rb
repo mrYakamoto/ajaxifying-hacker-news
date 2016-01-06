@@ -9,12 +9,18 @@ end
 
 get '/posts/:id/vote' do
   post = Post.find(params[:id])
-  post.votes.create(value: 1)
-  redirect "/posts"
+  vote = post.votes.create(value: 1)
+  if request.xhr?
+    {points: post.points, id: params[:id]}.to_json
+  else
+    redirect '/posts'
+  end
 end
 
 delete '/posts/:id' do
-  # write logic for deleting posts here.
+   post = Post.find(params[:id])
+   post.destroy
+   return params[:id].to_s
 end
 
 post '/posts' do
