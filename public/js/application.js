@@ -7,6 +7,7 @@ $(document).ready(function() {
   vote();
   removePost();
   submitNewPost();
+  displayByNew();
 });
 
 var vote = function(){
@@ -45,14 +46,15 @@ var deletePost = function(a){
   })
   .done(function(postId){
     $( "article#" +  postId).remove();
-})
+  })
 };
 
 var submitNewPost = function(){
   $("form#posts").submit(function(e){
-  e.preventDefault();
-  displayPost(this);
-})
+    e.preventDefault();
+    displayPost(this);
+
+  })
 };
 
 var displayPost = function(form){
@@ -62,9 +64,45 @@ var displayPost = function(form){
     url: '/posts'
   })
   .done(function(newPost){
-    $( "div.post-container" ).append(newPost)
+    console.log(newPost);
+    if (newPost == "400"){
+      alert("400 error: title must not be blank");
+    }
+    else {
+      $( "div.post-container" ).append(newPost)
+    }
   })
 };
+
+var displayByNew = function(){
+  $( "a#display_by_new" ).on('click', function(e){
+    e.preventDefault();
+    $( "div.post-container" ).empty();
+    $.ajax({
+      method: "GET",
+      url: this["href"]
+    })
+    .done(function(sortedPosts){
+      sortedPosts = JSON.parse(sortedPosts);
+      sortedPosts.forEach(function(post){
+
+        $( "div.post-container" ).append(
+          "<article id=" + post.id + "><a href='/posts/'" + post.id + "/vote' class='fa fa-sort-desc vote-button'></a><h2><a href='/posts/" + post.id + "'> " + post.title + "</a></h2><p><span class='points'>" + post.points + "</span><span class='username'>" + post.username + "</span><span class='timestamp'>" + post.time_since_creation + "</span><span class='comment-count'>" + post.comment_count + "</span><a class='delete' href='/posts/" + post.id + "'></a></p></article>"
+        );
+
+
+        console.log(post);})
+    })
+  })
+};
+
+
+
+
+
+
+
+
 
 
 

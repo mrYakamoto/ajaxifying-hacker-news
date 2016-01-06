@@ -26,13 +26,23 @@ end
 
 post '/posts' do
   p params
-  @post = Post.create( title: params[:title],
+  @post = Post.new( title: params[:title],
                username: Faker::Internet.user_name,
                comment_count: rand(1000) )
-  erb :_new_post, :layout => false
+  if @post.save
+    erb :_new_post, :layout => false
+  else
+    "400"
+  end
 end
 
 get '/post/:id' do
   @post = Post.find(params[:id])
   erb :post
+end
+
+get '/sort/:by' do
+  if params[:by] == "new"
+    @posts = Post.order('created_at ASC').to_json
+  end
 end
