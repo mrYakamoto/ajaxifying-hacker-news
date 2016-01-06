@@ -19,15 +19,17 @@ end
 
 delete '/posts/:id' do
    post = Post.find(params[:id])
+   post.votes.each{ |vote| vote.destroy}
    post.destroy
    return params[:id].to_s
 end
 
 post '/posts' do
-  Post.create( title: params[:title],
+  p params
+  @post = Post.create( title: params[:title],
                username: Faker::Internet.user_name,
                comment_count: rand(1000) )
-  redirect '/posts'
+  erb :_new_post, :layout => false
 end
 
 get '/post/:id' do
