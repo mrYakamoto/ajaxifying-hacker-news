@@ -6,6 +6,7 @@ $(document).ready(function() {
   // See: http://docs.jquery.com/Tutorials:Introducing_$(document).ready()
   vote();
   removePost();
+  submitNewPost();
 });
 
 var vote = function(){
@@ -46,3 +47,31 @@ var deletePost = function(a){
     $( "article#" +  postId).remove();
 })
 };
+
+var submitNewPost = function(){
+  $("form#posts").submit(function(e){
+  e.preventDefault();
+  displayPost(this);
+})
+};
+
+var displayPost = function(form){
+  $.ajax({
+    data:$(form).serialize(),
+    method: "POST",
+    url: '/posts'
+  })
+  .done(function(newPost){
+    $( "div.post-container" ).append(newPost)
+  })
+};
+
+
+
+
+
+
+
+
+
+
